@@ -362,6 +362,7 @@ def pre_play(nzbname, **kwargs):
     else:
         utils.notification("No playable files found!")
         log("pre_play: no playable files found")
+        #log("the_end(folder, True, sab_nzo_id, sab_nzo_id_history): %s, %s, %s" % (folder, sab_nzo_id, sab_nzo_id_history))
         the_end(folder, True, sab_nzo_id, sab_nzo_id_history)
         return
 
@@ -569,6 +570,8 @@ def play_video(params):
 def the_end(folder, is_stopped=False, sab_nzo_id=None, sab_nzo_id_history=None):
     log("the_end: folder: %s is_stopped: %s" % (folder, is_stopped))
     dummy, nzbname = os.path.split(os.path.dirname(folder))
+    sab_nzo_id_history = sabnzbd.nzo_id_history(nzbname)
+    #log("the_end: sab_nzo_id_history: %s, sab_nzo_id: %s" % (sab_nzo_id_history, sab_nzo_id))
     if sab_nzo_id_history or sab_nzo_id is None:
         if sab_nzo_id_history is None:
             sab_nzo_id_history = sabnzbd.nzo_id_history(nzbname)
@@ -617,8 +620,10 @@ def the_end_dialog(params, **kwargs):
     if ret == 0:
         delete(params)
     if ret == 1 and progressing:
+        #log("progressing")
         just_download(params)
     elif ret == 1 and not progressing:
+        #log("not progressing")
         repair(params)
     return
 
