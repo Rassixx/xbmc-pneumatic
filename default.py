@@ -656,6 +656,10 @@ def delete(params):
                         log("delete: delete failed, trying to delete from history")
                         delete_ = sabnzbd.nzo_delete_history_files(sab_nzo_id)
                         log("delete: delete_: %s" % delete_)
+                    if "'status': True" in delete_ or "ok" in delete_:
+                        utils.notification("Deleting successful")
+                    else:
+                        utils.notification("Deleting failed")
                 else:
                     delete_ = "failed"
                 #log("rassi: after delete")
