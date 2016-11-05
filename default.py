@@ -167,13 +167,16 @@ def is_nzb_home(params):
                     #Trying to delete both the queue and history
                     if sab_nzo_id is not None:
                         pause = sabnzbd.nzo_pause(sab_nzo_id)
+                        #log("rassi pause")
                         log("is_nzb_home: pause: sab_nzo_id: %s msg: %s" % (sab_nzo_id, pause))
                         time.sleep(3)
+                        #log("rassi before delete")
                         delete_msg = sabnzbd.nzo_delete_files(sab_nzo_id)
                         log("is_nzb_home: delete_queue: sab_nzo_id: %s nzbname: %s msg: %s" % (sab_nzo_id, nzbname, delete_msg))
                         if not "ok" in delete_msg:
                             delete_msg = sabnzbd.nzo_delete_history_files(sab_nzo_id)
                             log("is_nzb_home: delete_history: sab_nzo_id: %s nzbname: %s msg: %s" % (sab_nzo_id, nzbname, delete_msg))
+                        #log("rassi after delete")
                     else:
                         log("is_nzb_home: failed removing %s from the queue" % nzbname)
                     iscanceled = True
@@ -641,12 +644,21 @@ def delete(params):
             if not "None" in sab_nzo_id and not delete_all:
                 pause = sabnzbd.nzo_pause(sab_nzo_id)
                 log("delete: pause: %s" % pause)
+                #log("rassi: pause")
                 time.sleep(3)
-                if "ok" in pause:
+                #log("rassi: before delete")
+                #log("rassi: type(pause) %s" & str(type(pause)))
+                if "'status': True" in pause:
+                    #log("rassi: before delete ok")
                     delete_ = sabnzbd.nzo_delete_files(sab_nzo_id)
                     log("delete: delete_: %s" % delete_)
+                    if "'status': False" in delete_:
+                        log("delete: delete failed, trying to delete from history")
+                        delete_ = sabnzbd.nzo_delete_history_files(sab_nzo_id)
+                        log("delete: delete_: %s" % delete_)
                 else:
                     delete_ = "failed"
+                #log("rassi: after delete")
         if sab_nzo_id_history:
             if not "None" in sab_nzo_id_history and not delete_all:
                 delete_ = sabnzbd.nzo_delete_history_files(sab_nzo_id_history)
