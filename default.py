@@ -362,6 +362,7 @@ def pre_play(nzbname, **kwargs):
     else:
         utils.notification("No playable files found!")
         log("pre_play: no playable files found")
+        the_end(folder, True, sab_nzo_id, sab_nzo_id_history)
         return
 
 def set_streaming(sab_nzo_id):
@@ -656,10 +657,6 @@ def delete(params):
                         log("delete: delete failed, trying to delete from history")
                         delete_ = sabnzbd.nzo_delete_history_files(sab_nzo_id)
                         log("delete: delete_: %s" % delete_)
-                    if "'status': True" in delete_ or "ok" in delete_:
-                        utils.notification("Deleting successful")
-                    else:
-                        utils.notification("Deleting failed")
                 else:
                     delete_ = "failed"
                 #log("rassi: after delete")
@@ -672,8 +669,12 @@ def delete(params):
                 if delete_state is not delete_:
                     delete_state = "failed"
             delete_ = delete_state
-        if not "ok" in delete_:
+        if "'status': True" in delete_ or "ok" in delete_:
+            utils.notification("Deleting successful")
+        else:
             utils.notification("Deleting failed")
+#        if not "ok" in delete_:
+#            utils.notification("Deleting failed")
     else:
         utils.notification("Deleting failed")
         log("delete: deleting failed")
