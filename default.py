@@ -554,7 +554,9 @@ def play_video(params):
                 the_end(folder, player.is_stopped, params.get("nzoid"), params.get("nzoidhistory"))
                 player.is_active = False
             elif player.is_ended:
-                the_end(folder, False, params.get("nzoid"), params.get("nzoidhistory"))
+                time.sleep(1)
+                log("rassi: player.is_ended, player.is_stopped %s" % player.is_stopped)
+                the_end(folder, True, params.get("nzoid"), params.get("nzoidhistory"))
                 player.is_active = False
             elif wait >= 6000 and not player.isPlayingVideo():
                 utils.notification("Error playing file!")
